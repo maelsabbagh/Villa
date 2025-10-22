@@ -17,11 +17,16 @@ namespace Villa_VillaAPI.Controllers
         }
 
         [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         public ActionResult<IEnumerable<VillaDTO>>GetVillas()
         {
             return Ok(_villaService.getVillas());
         }
         [HttpGet("{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public ActionResult<VillaDTO> getVilla(int id)
         {
             if (id <= 0) return BadRequest();
