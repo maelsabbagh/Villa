@@ -6,5 +6,6 @@ namespace Villa_VillaAPI.Services
     public interface IVillaService
     {
         IEnumerable<VillaDTO> getVillas();
+        VillaDTO getVilla(int id);
     }
 }

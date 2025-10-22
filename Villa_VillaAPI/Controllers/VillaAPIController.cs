@@ -21,5 +21,10 @@ namespace Villa_VillaAPI.Controllers
         {
             return _villaService.getVillas();
         }
+        [HttpGet("{id}")]
+        public VillaDTO getVilla(int id)
+        {
+            return _villaService.getVilla(id);
+        }
     }
 }
