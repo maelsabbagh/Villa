@@ -17,14 +17,32 @@ namespace Villa_VillaAPI.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<VillaDTO>GetVillas()
+        public ActionResult<IEnumerable<VillaDTO>>GetVillas()
         {
-            return _villaService.getVillas();
+            return Ok(_villaService.getVillas());
         }
         [HttpGet("{id}")]
-        public VillaDTO getVilla(int id)
+        public ActionResult<VillaDTO> getVilla(int id)
         {
-            return _villaService.getVilla(id);
+            if (id <= 0) return BadRequest();
+            try
+            {
+                var villa = _villaService.getVilla(id);
+
+                if (villa == null)
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    return Ok(villa);
+                }
+
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = ex.Message });
+            }
         }
     }
 }
