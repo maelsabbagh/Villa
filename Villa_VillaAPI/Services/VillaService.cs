@@ -6,14 +6,32 @@ namespace Villa_VillaAPI.Services
 {
     public class VillaService : IVillaService
     {
+
+
+        public IEnumerable<VillaDTO> getVillas()
+        {
+            return VillaStore.villaList;
+        }
+
         public VillaDTO getVilla(int id)
         {
             return VillaStore.villaList.Where(v => v.Id == id).FirstOrDefault();
         }
 
-        public IEnumerable<VillaDTO> getVillas()
+        public VillaDTO AddVilla(string Name)
         {
-            return VillaStore.villaList;
+            int id = VillaStore.villaList.Max(v => v.Id);
+            id++;
+
+            VillaDTO villa = new VillaDTO
+            {
+                Id = id,
+                Name = Name
+            };
+
+            VillaStore.villaList.Add(villa);
+
+            return villa;
         }
     }
 }

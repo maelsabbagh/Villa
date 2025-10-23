@@ -7,7 +7,7 @@ namespace Villa_VillaAPI.Controllers
 {
     [ApiController]
     [Route("api/VillaAPI")]
-    public class VillaAPIController:ControllerBase
+    public class VillaAPIController : ControllerBase
     {
         private readonly IVillaService _villaService;
 
@@ -18,11 +18,13 @@ namespace Villa_VillaAPI.Controllers
 
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public ActionResult<IEnumerable<VillaDTO>>GetVillas()
+        public ActionResult<IEnumerable<VillaDTO>> GetVillas()
         {
             return Ok(_villaService.getVillas());
         }
-        [HttpGet("{id}")]
+
+
+        [HttpGet("{id}",Name ="GetVilla")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -48,6 +50,21 @@ namespace Villa_VillaAPI.Controllers
             {
                 return StatusCode(500, new { message = ex.Message });
             }
+        }
+
+        [HttpPost]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public ActionResult<VillaDTO> CreateVilla(VillaDTO dto)
+        {
+            if (dto == null || dto.Id>0) return BadRequest();
+
+
+            //return Ok(_villaService.AddVilla(dto.Name));
+
+             VillaDTO villa = _villaService.AddVilla(dto.Name);
+
+            return CreatedAtRoute("GetVilla", new { id=villa.Id }, villa);
         }
     }
 }
