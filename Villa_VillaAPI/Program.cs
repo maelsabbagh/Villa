@@ -1,10 +1,16 @@
 using Villa_VillaAPI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+
+Log.Logger = new LoggerConfiguration().MinimumLevel.Debug()
+    .WriteTo.File("log/villaLogs.txt", rollingInterval: RollingInterval.Day).CreateLogger(); // logs in file each day
+
+builder.Host.UseSerilog(); // when an instance of logger is requested, dependency injection will provide a serilog instance
 
 builder.Services.AddControllers()
     .AddNewtonsoftJson();
