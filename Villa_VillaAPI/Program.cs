@@ -1,10 +1,14 @@
 using Villa_VillaAPI.Services;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddNewtonsoftJson();
+   
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddScoped<IVillaService, VillaService>();
