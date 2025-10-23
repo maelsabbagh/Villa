@@ -9,5 +9,9 @@ namespace Villa_VillaAPI.Models.DTO
         [Required]
         [MaxLength(30)]
         public string Name { get; set; }
+
+        public int Sqft { get; set; } //square feet
+
+        public int Occupancy { get; set; }
     }
 }

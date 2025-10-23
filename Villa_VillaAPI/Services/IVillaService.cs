@@ -7,8 +7,10 @@ namespace Villa_VillaAPI.Services
     {
         IEnumerable<VillaDTO> GetVillas();
         VillaDTO GetVilla(int id);
-        VillaDTO AddVilla(string Name);
+        VillaDTO AddVilla(VillaDTO villaDTO);
 
         bool DeleteVilla(int id);
+
+        bool UpdateVilla(VillaDTO villaDto);
     }
 }

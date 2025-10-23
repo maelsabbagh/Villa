@@ -62,7 +62,7 @@ namespace Villa_VillaAPI.Controllers
 
             //return Ok(_villaService.AddVilla(dto.Name));
 
-            VillaDTO villa = _villaService.AddVilla(dto.Name);
+            VillaDTO villa = _villaService.AddVilla(dto);
 
             return CreatedAtRoute("GetVilla", new { id = villa.Id }, villa);
         }
@@ -83,13 +83,23 @@ namespace Villa_VillaAPI.Controllers
         }
 
 
-        //[HttpPut("{id}")]
-        //public IActionResult UpdateVilla(int id, [FromBody] VillaDTO villaDTO)
-        //{
-        //    if (villaDTO == null ||id!=villaDTO.Id)
-        //    {
-        //        return BadRequest();
-        //    }
-        //}
+        
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [HttpPut("{id}")]
+        public IActionResult UpdateVilla(int id, [FromBody] VillaDTO villaDTO)
+        {
+            if (villaDTO == null || id != villaDTO.Id)
+            {
+                return BadRequest();
+            }
+
+            bool isUpdated = _villaService.UpdateVilla(villaDTO);
+
+            if (!isUpdated) return NotFound();
+
+            return NoContent();
+        }
     }
 }

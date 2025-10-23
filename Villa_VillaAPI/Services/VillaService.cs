@@ -19,7 +19,7 @@ namespace Villa_VillaAPI.Services
             return VillaStore.villaList.Where(v => v.Id == id).FirstOrDefault();
         }
 
-        public VillaDTO AddVilla(string Name)
+        public VillaDTO AddVilla(VillaDTO villaDTO)
         {
             int id = VillaStore.villaList.Max(v => v.Id);
             id++;
@@ -27,7 +27,9 @@ namespace Villa_VillaAPI.Services
             VillaDTO villa = new VillaDTO
             {
                 Id = id,
-                Name = Name
+                Name = villaDTO.Name,
+                Occupancy=villaDTO.Occupancy,
+                Sqft=villaDTO.Sqft
             };
 
             VillaStore.villaList.Add(villa);
@@ -42,6 +44,19 @@ namespace Villa_VillaAPI.Services
 
 
             VillaStore.villaList.Remove(villa);
+            return true;
+        }
+
+        public bool UpdateVilla(VillaDTO villaDTO)
+        {
+            var villa = VillaStore.villaList.FirstOrDefault(v => v.Id == villaDTO.Id);
+
+            if (villa == null) return false;
+
+            villa.Name = villaDTO.Name;
+            villa.Sqft = villaDTO.Sqft;
+            villa.Occupancy = villaDTO.Occupancy;
+
             return true;
         }
     }
