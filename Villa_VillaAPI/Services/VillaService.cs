@@ -1,4 +1,5 @@
-﻿using Villa_VillaAPI.Data;
+﻿using Microsoft.AspNetCore.Http.HttpResults;
+using Villa_VillaAPI.Data;
 using Villa_VillaAPI.Models;
 using Villa_VillaAPI.Models.DTO;
 
@@ -8,12 +9,12 @@ namespace Villa_VillaAPI.Services
     {
 
 
-        public IEnumerable<VillaDTO> getVillas()
+        public IEnumerable<VillaDTO> GetVillas()
         {
             return VillaStore.villaList;
         }
 
-        public VillaDTO getVilla(int id)
+        public VillaDTO GetVilla(int id)
         {
             return VillaStore.villaList.Where(v => v.Id == id).FirstOrDefault();
         }
@@ -32,6 +33,16 @@ namespace Villa_VillaAPI.Services
             VillaStore.villaList.Add(villa);
 
             return villa;
+        }
+
+        public bool DeleteVilla(int id)
+        {
+            var villa = VillaStore.villaList.FirstOrDefault(v => v.Id == id);
+            if (villa == null) return false;
+
+
+            VillaStore.villaList.Remove(villa);
+            return true;
         }
     }
 }

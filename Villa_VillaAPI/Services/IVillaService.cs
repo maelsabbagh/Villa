@@ -5,8 +5,10 @@ namespace Villa_VillaAPI.Services
 {
     public interface IVillaService
     {
-        IEnumerable<VillaDTO> getVillas();
-        VillaDTO getVilla(int id);
-        public VillaDTO AddVilla(string Name);
+        IEnumerable<VillaDTO> GetVillas();
+        VillaDTO GetVilla(int id);
+        VillaDTO AddVilla(string Name);
+
+        bool DeleteVilla(int id);
     }
 }
