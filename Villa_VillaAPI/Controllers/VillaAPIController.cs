@@ -10,10 +10,12 @@ namespace Villa_VillaAPI.Controllers
     public class VillaAPIController : ControllerBase
     {
         private readonly IVillaService _villaService;
+        private readonly ILogger<VillaAPIController> _logger;
 
-        public VillaAPIController(IVillaService villaService)
+        public VillaAPIController(IVillaService villaService,ILogger<VillaAPIController>logger)
         {
             _villaService = villaService;
+            _logger = logger;
         }
 
         [HttpGet]
@@ -31,13 +33,18 @@ namespace Villa_VillaAPI.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public ActionResult<VillaDTO> getVilla(int id)
         {
-            if (id <= 0) return BadRequest();
+            if (id <= 0)
+            {
+                _logger.LogError($"Invalid id: {id}");
+                return BadRequest();
+            }
             try
             {
                 var villa = _villaService.GetVilla(id);
 
                 if (villa == null)
                 {
+                    _logger.LogError($"Villa is not found");
                     return NotFound();
                 }
                 else
@@ -48,6 +55,7 @@ namespace Villa_VillaAPI.Controllers
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex, ex.Message);
                 return StatusCode(500, new { message = ex.Message });
             }
         }
@@ -73,7 +81,11 @@ namespace Villa_VillaAPI.Controllers
         [HttpDelete("{id}")]
         public IActionResult DeleteVilla(int id)
         {
-            if (id <= 0) return BadRequest("Invalid Villa id");
+            if (id <= 0)
+            {
+                _logger.LogError($"Invalid id: {id}");
+                return BadRequest("Invalid Villa id");
+            }
 
             bool isDeleted = _villaService.DeleteVilla(id);
 
