@@ -29,7 +29,7 @@ namespace Villa_VillaAPI.Services
                 Id = id,
                 Name = villaDTO.Name,
                 Occupancy=villaDTO.Occupancy,
-                Sqft=villaDTO.Sqft
+                Sqmt=villaDTO.Sqmt
             };
 
             VillaStore.villaList.Add(villa);
@@ -54,7 +54,7 @@ namespace Villa_VillaAPI.Services
             if (villa == null) return false;
 
             villa.Name = villaDTO.Name;
-            villa.Sqft = villaDTO.Sqft;
+            villa.Sqmt = villaDTO.Sqmt;
             villa.Occupancy = villaDTO.Occupancy;
 
             return true;
