@@ -2,9 +2,14 @@ using Villa_VillaAPI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
+using Villa_VillaAPI.Data;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
-
+builder.Services.AddDbContext<ApplicationDbContext>(option =>
+{
+    option.UseSqlServer(builder.Configuration.GetConnectionString("DefaultSQLConnection"));
+});
 // Add services to the container.
 
 Log.Logger = new LoggerConfiguration().MinimumLevel.Debug()
