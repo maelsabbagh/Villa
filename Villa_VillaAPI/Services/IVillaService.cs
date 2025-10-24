@@ -5,12 +5,12 @@ namespace Villa_VillaAPI.Services
 {
     public interface IVillaService
     {
-        IEnumerable<VillaDTO> GetVillas();
-        VillaDTO GetVilla(int id);
-        VillaDTO AddVilla(VillaDTO villaDTO);
+        Task<IEnumerable<VillaDTO>> GetVillas();
+        Task<VillaDTO> GetVilla(int id);
+        Task<VillaDTO> AddVilla(VillaDTO villaDTO);
 
-        bool DeleteVilla(int id);
+        Task<bool> DeleteVilla(int id);
 
-        bool UpdateVilla(VillaDTO villaDto);
+        Task<bool> UpdateVilla(VillaDTO villaDto);
     }
 }

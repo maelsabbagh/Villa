@@ -20,9 +20,9 @@ namespace Villa_VillaAPI.Controllers
 
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public ActionResult<IEnumerable<VillaDTO>> GetVillas()
+        public async Task <ActionResult<IEnumerable<VillaDTO>>> GetVillas()
         {
-            return Ok(_villaService.GetVillas());
+            return Ok( await _villaService.GetVillas());
         }
 
 
@@ -31,7 +31,7 @@ namespace Villa_VillaAPI.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public ActionResult<VillaDTO> getVilla(int id)
+        public async Task<ActionResult<VillaDTO>> getVilla(int id)
         {
             if (id <= 0)
             {
@@ -40,7 +40,7 @@ namespace Villa_VillaAPI.Controllers
             }
             try
             {
-                var villa = _villaService.GetVilla(id);
+                var villa = await _villaService.GetVilla(id);
 
                 if (villa == null)
                 {
@@ -63,14 +63,14 @@ namespace Villa_VillaAPI.Controllers
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public ActionResult<VillaDTO> CreateVilla(VillaDTO dto)
+        public async Task<ActionResult<VillaDTO>> CreateVilla(VillaDTO dto)
         {
             if (dto == null || dto.Id > 0) return BadRequest();
 
 
             //return Ok(_villaService.AddVilla(dto.Name));
 
-            VillaDTO villa = _villaService.AddVilla(dto);
+            VillaDTO villa = await _villaService.AddVilla(dto);
 
             return CreatedAtRoute("GetVilla", new { id = villa.Id }, villa);
         }
@@ -79,7 +79,7 @@ namespace Villa_VillaAPI.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
 
         [HttpDelete("{id}")]
-        public IActionResult DeleteVilla(int id)
+        public async Task<IActionResult> DeleteVilla(int id)
         {
             if (id <= 0)
             {
@@ -87,7 +87,7 @@ namespace Villa_VillaAPI.Controllers
                 return BadRequest("Invalid Villa id");
             }
 
-            bool isDeleted = _villaService.DeleteVilla(id);
+            bool isDeleted = await _villaService.DeleteVilla(id);
 
             if (!isDeleted) return NotFound();
 
@@ -100,14 +100,14 @@ namespace Villa_VillaAPI.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [HttpPut("{id}")]
-        public IActionResult UpdateVilla(int id, [FromBody] VillaDTO villaDTO)
+        public async Task<IActionResult> UpdateVilla(int id, [FromBody] VillaDTO villaDTO)
         {
             if (villaDTO == null || id != villaDTO.Id)
             {
                 return BadRequest();
             }
 
-            bool isUpdated = _villaService.UpdateVilla(villaDTO);
+            bool isUpdated = await _villaService.UpdateVilla(villaDTO);
 
             if (!isUpdated) return NotFound();
 

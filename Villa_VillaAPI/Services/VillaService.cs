@@ -15,9 +15,10 @@ namespace Villa_VillaAPI.Services
             _context = context;
         }
 
-        public IEnumerable<VillaDTO> GetVillas()
+        public async Task<IEnumerable<VillaDTO>> GetVillas()
         {
-            return _context.Villas
+            return await _context.Villas
+                .AsNoTracking()
                 .Select(v=>new VillaDTO()
                 {
                     Id=v.Id,
@@ -29,14 +30,15 @@ namespace Villa_VillaAPI.Services
                     Rate= v.Rate,
                     Sqmt = v.Sqmt
                 })
-                .ToList();
+                .ToListAsync();
         }
 
-        public VillaDTO GetVilla(int id)
+        public async Task<VillaDTO> GetVilla(int id)
         {
             //return VillaStore.villaList.Where(v => v.Id == id).FirstOrDefault();
 
-            return _context.Villas
+            return await _context.Villas
+                .AsNoTracking()
                 .Select(v => new VillaDTO()
                 {
                     Id = v.Id,
@@ -48,15 +50,13 @@ namespace Villa_VillaAPI.Services
                     Rate = v.Rate,
                     Sqmt = v.Sqmt
                 })
-                .FirstOrDefault(v => v.Id == id);
+                .FirstOrDefaultAsync(v => v.Id == id);
                 
 
         }
 
-        public VillaDTO AddVilla(VillaDTO villaDTO)
+        public async Task<VillaDTO> AddVilla(VillaDTO villaDTO)
         {
-            int id = _context.Villas.Max(v => v.Id);
-            id++;
 
             Villa villa = new Villa()
             {
@@ -70,26 +70,26 @@ namespace Villa_VillaAPI.Services
                 CreatedDate=DateTime.Now
             };
 
-            _context.Villas.Add(villa);
-            _context.SaveChanges();
+            await _context.Villas.AddAsync(villa);
+            await _context.SaveChangesAsync();
             villaDTO.Id = villa.Id;
             return villaDTO;
         }
 
-        public bool DeleteVilla(int id)
+        public async Task<bool> DeleteVilla(int id)
         {
-            var villa = _context.Villas.FirstOrDefault(v => v.Id == id);
+            var villa = await _context.Villas.FirstOrDefaultAsync(v => v.Id == id);
             if (villa == null) return false;
 
 
             _context.Villas.Remove(villa);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
             return true;
         }
 
-        public bool UpdateVilla(VillaDTO villaDTO)
+        public async Task<bool> UpdateVilla(VillaDTO villaDTO)
         {
-            var villa = _context.Villas.FirstOrDefault(v => v.Id == villaDTO.Id);
+            var villa = await _context.Villas.FirstOrDefaultAsync(v => v.Id == villaDTO.Id);
 
             if (villa == null) return false;
 
@@ -103,7 +103,7 @@ namespace Villa_VillaAPI.Services
             villa.UpdatedDate = DateTime.Now;
 
             _context.Update(villa);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
             return true;
         }
