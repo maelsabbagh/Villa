@@ -55,7 +55,7 @@ namespace Villa_VillaAPI.Services
 
         }
 
-        public async Task<VillaDTO> AddVilla(VillaDTO villaDTO)
+        public async Task<VillaDTO> AddVilla(VillaCreateDTO villaDTO)
         {
 
             Villa villa = new Villa()
@@ -65,15 +65,26 @@ namespace Villa_VillaAPI.Services
                 Details = villaDTO.Details,
                 Amenity = villaDTO.Amenity,
                 Occupancy = villaDTO.Occupancy,
-                Rate = villaDTO.Rate,
+                Rate = villaDTO.Rate.GetValueOrDefault(),
                 Sqmt = villaDTO.Sqmt,
                 CreatedDate=DateTime.Now
             };
 
             await _context.Villas.AddAsync(villa);
             await _context.SaveChangesAsync();
-            villaDTO.Id = villa.Id;
-            return villaDTO;
+
+            var savedVillaDTO = new VillaDTO()
+            {
+                Name = villa.Name,
+                ImageURL = villa.ImageURL,
+                Details = villa.Details,
+                Amenity = villa.Amenity,
+                Occupancy = villa.Occupancy,
+                Rate = villa.Rate,
+                Sqmt = villa.Sqmt,
+                Id = villa.Id
+            };
+            return savedVillaDTO;
         }
 
         public async Task<bool> DeleteVilla(int id)
@@ -87,17 +98,17 @@ namespace Villa_VillaAPI.Services
             return true;
         }
 
-        public async Task<bool> UpdateVilla(VillaDTO villaDTO)
+        public async Task<bool> UpdateVilla(VillaUpdateDTO villaDTO)
         {
             var villa = await _context.Villas.FirstOrDefaultAsync(v => v.Id == villaDTO.Id);
 
             if (villa == null) return false;
 
             villa.Name = villaDTO.Name;
-            villa.Sqmt = villaDTO.Sqmt;
+            villa.Sqmt = villaDTO.Sqmt.GetValueOrDefault();
             villa.Occupancy = villaDTO.Occupancy;
             villa.Amenity = villaDTO.Amenity;
-            villa.Rate = villaDTO.Rate;
+            villa.Rate = villaDTO.Rate.GetValueOrDefault();
             villa.Details = villaDTO.Details;
             villa.ImageURL = villaDTO.ImageURL;
             villa.UpdatedDate = DateTime.Now;

@@ -7,10 +7,10 @@ namespace Villa_VillaAPI.Services
     {
         Task<IEnumerable<VillaDTO>> GetVillas();
         Task<VillaDTO> GetVilla(int id);
-        Task<VillaDTO> AddVilla(VillaDTO villaDTO);
+        Task<VillaDTO> AddVilla(VillaCreateDTO villaDTO);
 
         Task<bool> DeleteVilla(int id);
 
-        Task<bool> UpdateVilla(VillaDTO villaDto);
+        Task<bool> UpdateVilla(VillaUpdateDTO villaDto);
     }
 }

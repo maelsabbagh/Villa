@@ -63,10 +63,9 @@ namespace Villa_VillaAPI.Controllers
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<VillaDTO>> CreateVilla(VillaDTO dto)
+        public async Task<ActionResult<VillaDTO>> CreateVilla(VillaCreateDTO dto)
         {
-            if (dto == null || dto.Id > 0) return BadRequest();
-
+            if (dto == null) return BadRequest();
 
             //return Ok(_villaService.AddVilla(dto.Name));
 
@@ -100,7 +99,7 @@ namespace Villa_VillaAPI.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateVilla(int id, [FromBody] VillaDTO villaDTO)
+        public async Task<IActionResult> UpdateVilla(int id, [FromBody] VillaUpdateDTO villaDTO)
         {
             if (villaDTO == null || id != villaDTO.Id)
             {
