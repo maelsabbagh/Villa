@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using System.Net;
 using Villa_VillaAPI.Models;
 using Villa_VillaAPI.Models.DTO;
 using Villa_VillaAPI.Services;
@@ -11,25 +12,30 @@ namespace Villa_VillaAPI.Controllers
     {
         private readonly IVillaService _villaService;
         private readonly ILogger<VillaAPIController> _logger;
+        private readonly IAPIService _APIService;
 
-        public VillaAPIController(IVillaService villaService,ILogger<VillaAPIController>logger)
+        public VillaAPIController(IVillaService villaService,ILogger<VillaAPIController>logger,IAPIService APIService)
         {
             _villaService = villaService;
             _logger = logger;
+            _APIService = APIService;
         }
 
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task <ActionResult<IEnumerable<VillaDTO>>> GetVillas()
+        public async Task <ActionResult<APIResponse>> GetVillas()
         {
             try
             {
-                return Ok(await _villaService.GetVillas());
+                var villas = await _villaService.GetVillas();
+                var response = _APIService.CreateSuccessResponse(HttpStatusCode.OK, villas);
+                return Ok(response);
             }
             catch(Exception ex)
             {
                 _logger.LogError(ex, ex.Message);
-                return StatusCode(StatusCodes.Status500InternalServerError, new { message = ex.Message });
+                var response = _APIService.CreateFailureResponse(HttpStatusCode.InternalServerError,new List<string>() { ex.Message});
+                return StatusCode(500, response);
             }
         }
 
@@ -39,12 +45,15 @@ namespace Villa_VillaAPI.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<VillaDTO>> getVilla(int id)
+        public async Task<ActionResult<APIResponse>> getVilla(int id)
         {
             if (id <= 0)
             {
-                _logger.LogError($"Invalid id: {id}");
-                return BadRequest();
+                string errorMessage = $"Invalid id: {id}";
+                _logger.LogError(errorMessage);
+                var response = _APIService.CreateFailureResponse(HttpStatusCode.BadRequest, new List<string>() { errorMessage });
+                return BadRequest(response);
+
             }
             try
             {
@@ -52,40 +61,49 @@ namespace Villa_VillaAPI.Controllers
 
                 if (villa == null)
                 {
-                    _logger.LogError($"Villa is not found");
-                    return NotFound();
+                    string errorMessage=$"Villa is not found";
+                    _logger.LogError(errorMessage);
+                    var response = _APIService.CreateFailureResponse(HttpStatusCode.NotFound, new List<string>() { errorMessage });
+                    return NotFound(response);
                 }
                 else
                 {
-                    return Ok(villa);
+                    var response = _APIService.CreateSuccessResponse(HttpStatusCode.OK, villa);
+                    return Ok(response);
                 }
 
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, ex.Message);
-                return StatusCode(500, new { message = ex.Message });
+                var response = _APIService.CreateFailureResponse(HttpStatusCode.InternalServerError, new List<string>() { ex.Message });
+                return StatusCode(500, response);
             }
         }
 
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<VillaDTO>> CreateVilla(VillaCreateDTO dto)
+        public async Task<ActionResult<APIResponse>> CreateVilla(VillaCreateDTO dto)
         {
-            if (dto == null) return BadRequest();
+            if (dto == null)
+            {
+                var response = _APIService.CreateFailureResponse(HttpStatusCode.BadRequest, new List<string>() { "request body is empty" });
+                return BadRequest(response); 
+            }
 
             try
             {
 
                 VillaDTO villa = await _villaService.AddVilla(dto);
-
-                return CreatedAtRoute("GetVilla", new { id = villa.Id }, villa);
+                var response = _APIService.CreateSuccessResponse(HttpStatusCode.OK, villa);
+                return CreatedAtRoute("GetVilla", new { id = villa.Id }, response);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, ex.Message);
-                return StatusCode(StatusCodes.Status500InternalServerError, new { message = ex.Message });
+                var response = _APIService.CreateFailureResponse(HttpStatusCode.InternalServerError, new List<string>() { ex.Message });
+                return StatusCode(500, response);
             }
         }
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -98,21 +116,28 @@ namespace Villa_VillaAPI.Controllers
             if (id <= 0)
             {
                 _logger.LogError($"Invalid id: {id}");
-                return BadRequest("Invalid Villa id");
+                var response = _APIService.CreateFailureResponse(HttpStatusCode.BadRequest, new List<string>() { $"Invalid id: {id}" });
+                return BadRequest(response);
             }
 
             try
             {
                 bool isDeleted = await _villaService.DeleteVilla(id);
 
-                if (!isDeleted) return NotFound();
+                if (!isDeleted)
+                {
+                    var response = _APIService.CreateFailureResponse(HttpStatusCode.NotFound, new List<string>() { "villa not found" });
+
+                    return NotFound(response);
+                }
 
                 return NoContent();
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, ex.Message);
-                return StatusCode(StatusCodes.Status500InternalServerError, new { message = ex.Message });
+                var response = _APIService.CreateFailureResponse(HttpStatusCode.InternalServerError, new List<string>() { ex.Message });
+                return StatusCode(500, response);
             }
         }
 
@@ -126,22 +151,29 @@ namespace Villa_VillaAPI.Controllers
         {
             if (villaDTO == null || id != villaDTO.Id)
             {
-                return BadRequest();
+                var response = _APIService.CreateFailureResponse(HttpStatusCode.BadRequest, new List<string>() { "Error" });
+                return BadRequest(response);
             }
             try
             {
 
                 bool isUpdated = await _villaService.UpdateVilla(villaDTO);
 
-                if (!isUpdated) return NotFound();
+                if (!isUpdated)
+                {
+                    var response = _APIService.CreateFailureResponse(HttpStatusCode.NotFound, new List<string>() { "villa not found" });
+                    return NotFound(response);
+                }
 
                 return NoContent();
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, ex.Message);
-                return StatusCode(StatusCodes.Status500InternalServerError, new { message = ex.Message });
+                var response = _APIService.CreateFailureResponse(HttpStatusCode.InternalServerError, new List<string>() { ex.Message });
+                return StatusCode(500, response);
             }
         }
+
     }
 }
