@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 using Villa_VillaAPI.Data;
 using Villa_VillaAPI.Models;
 
@@ -34,11 +35,22 @@ namespace Villa_VillaAPI.IRepository.Repository
             }
         }
 
-        public async Task<IEnumerable<Villa>> GetVillas()
+        public async Task<Villa> GetVilla(Expression<Func<Villa, bool>> filter = null, bool isTracked = true)
         {
-            return await _context.Villas
-                .ToListAsync();
+            IQueryable<Villa> query = _context.Villas;
+            if (isTracked)
+            {
+                query = query.AsNoTracking();
+            }
+            if (filter != null)
+            {
+                query = query.Where(filter);
+            }
+
+            return await query.FirstOrDefaultAsync();
+
         }
+
 
         public async Task DeleteVilla(Villa villa)
         {
@@ -55,6 +67,20 @@ namespace Villa_VillaAPI.IRepository.Repository
             _context.Update(villa);
             await Save();
 
+        }
+
+       
+
+        public async Task<IEnumerable<Villa>> GetAll(Expression<Func<Villa,bool>> filter = null)
+        {
+            IQueryable<Villa> query = _context.Villas;
+
+            if(filter!=null)
+            {
+                query = query.Where(filter);
+            }
+
+            return await query.ToListAsync();
         }
     }
 }

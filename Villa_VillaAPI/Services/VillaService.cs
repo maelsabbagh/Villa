@@ -23,7 +23,7 @@ namespace Villa_VillaAPI.Services
 
         public async Task<IEnumerable<VillaDTO>> GetVillas()
         {
-            var villaEntityList =await _villaRepository.GetVillas();
+            var villaEntityList =await _villaRepository.GetAll();
             var villaListDTO = _mapper.Map<IEnumerable<VillaDTO>>(villaEntityList);
 
             return villaListDTO;
@@ -48,7 +48,7 @@ namespace Villa_VillaAPI.Services
 
         public async Task<bool> DeleteVilla(int id)
         {
-            var villa = await _villaRepository.GetVilla(id);
+            var villa = await _villaRepository.GetVilla(v=>v.Id==id);
             if (villa == null) return false;
 
 
@@ -59,7 +59,7 @@ namespace Villa_VillaAPI.Services
 
         public async Task<bool> UpdateVilla(VillaUpdateDTO villaDTO)
         {
-            var villa = await _villaRepository.GetVilla(villaDTO.Id);
+            var villa = await _villaRepository.GetVilla(v=>v.Id==villaDTO.Id);
 
             if (villa == null) return false;
 
