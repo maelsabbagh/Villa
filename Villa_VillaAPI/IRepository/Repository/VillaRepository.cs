@@ -36,7 +36,7 @@ namespace Villa_VillaAPI.IRepository.Repository
             }
         }
 
-        public async Task<Villa> GetVilla(Expression<Func<Villa, bool>> filter = null, bool isTracked = true)
+        public async Task<Villa> GetVilla(Expression<Func<Villa, bool>>? filter = null, bool isTracked = true)
         {
             IQueryable<Villa> query = _context.Villas;
             if (!isTracked)
@@ -72,7 +72,7 @@ namespace Villa_VillaAPI.IRepository.Repository
 
        
 
-        public async Task<IEnumerable<Villa>> GetAll(Expression<Func<Villa,bool>> filter = null)
+        public async Task<IEnumerable<Villa>> GetAll(Expression<Func<Villa,bool>>? filter = null)
         {
             IQueryable<Villa> query = _context.Villas;
             query = query.AsNoTracking();
