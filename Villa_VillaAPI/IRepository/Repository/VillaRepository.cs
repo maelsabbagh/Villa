@@ -26,6 +26,7 @@ namespace Villa_VillaAPI.IRepository.Repository
             try
             {
                 return await _context.Villas
+                    .AsNoTracking()
                     .FirstOrDefaultAsync(v => v.Id == id);
             }
             catch(Exception ex)
@@ -38,7 +39,7 @@ namespace Villa_VillaAPI.IRepository.Repository
         public async Task<Villa> GetVilla(Expression<Func<Villa, bool>> filter = null, bool isTracked = true)
         {
             IQueryable<Villa> query = _context.Villas;
-            if (isTracked)
+            if (!isTracked)
             {
                 query = query.AsNoTracking();
             }
@@ -74,6 +75,7 @@ namespace Villa_VillaAPI.IRepository.Repository
         public async Task<IEnumerable<Villa>> GetAll(Expression<Func<Villa,bool>> filter = null)
         {
             IQueryable<Villa> query = _context.Villas;
+            query = query.AsNoTracking();
 
             if(filter!=null)
             {

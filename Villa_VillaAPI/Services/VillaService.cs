@@ -48,7 +48,7 @@ namespace Villa_VillaAPI.Services
 
         public async Task<bool> DeleteVilla(int id)
         {
-            var villa = await _villaRepository.GetVilla(v=>v.Id==id);
+            var villa = await _villaRepository.GetVilla(v=>v.Id==id); // tracked entity
             if (villa == null) return false;
 
 
@@ -59,14 +59,13 @@ namespace Villa_VillaAPI.Services
 
         public async Task<bool> UpdateVilla(VillaUpdateDTO villaDTO)
         {
-            var villa = await _villaRepository.GetVilla(v=>v.Id==villaDTO.Id);
+            var villa = await _villaRepository.GetVilla(v=>v.Id==villaDTO.Id); // tracked
 
             if (villa == null) return false;
 
             
 
             _mapper.Map(villaDTO, villa);
-
             await _villaRepository.Update(villa);
 
             return true;
