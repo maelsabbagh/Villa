@@ -22,7 +22,15 @@ namespace Villa_VillaAPI.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task <ActionResult<IEnumerable<VillaDTO>>> GetVillas()
         {
-            return Ok( await _villaService.GetVillas());
+            try
+            {
+                return Ok(await _villaService.GetVillas());
+            }
+            catch(Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return StatusCode(StatusCodes.Status500InternalServerError, new { message = ex.Message });
+            }
         }
 
 
@@ -67,11 +75,18 @@ namespace Villa_VillaAPI.Controllers
         {
             if (dto == null) return BadRequest();
 
-            //return Ok(_villaService.AddVilla(dto.Name));
+            try
+            {
 
-            VillaDTO villa = await _villaService.AddVilla(dto);
+                VillaDTO villa = await _villaService.AddVilla(dto);
 
-            return CreatedAtRoute("GetVilla", new { id = villa.Id }, villa);
+                return CreatedAtRoute("GetVilla", new { id = villa.Id }, villa);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return StatusCode(StatusCodes.Status500InternalServerError, new { message = ex.Message });
+            }
         }
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -86,11 +101,19 @@ namespace Villa_VillaAPI.Controllers
                 return BadRequest("Invalid Villa id");
             }
 
-            bool isDeleted = await _villaService.DeleteVilla(id);
+            try
+            {
+                bool isDeleted = await _villaService.DeleteVilla(id);
 
-            if (!isDeleted) return NotFound();
+                if (!isDeleted) return NotFound();
 
-            return NoContent();
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return StatusCode(StatusCodes.Status500InternalServerError, new { message = ex.Message });
+            }
         }
 
 
@@ -105,12 +128,20 @@ namespace Villa_VillaAPI.Controllers
             {
                 return BadRequest();
             }
+            try
+            {
 
-            bool isUpdated = await _villaService.UpdateVilla(villaDTO);
+                bool isUpdated = await _villaService.UpdateVilla(villaDTO);
 
-            if (!isUpdated) return NotFound();
+                if (!isUpdated) return NotFound();
 
-            return NoContent();
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return StatusCode(StatusCodes.Status500InternalServerError, new { message = ex.Message });
+            }
         }
     }
 }
