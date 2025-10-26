@@ -17,5 +17,7 @@ namespace Villa_VillaAPI.Models
         public string Amenity { get; set; }
         public DateTime CreatedDate { get; set; }
         public DateTime UpdatedDate { get; set; }
+
+        public ICollection<VillaNumber> VillaNumbers { get; set; } = new List<VillaNumber>();
     }
 }
