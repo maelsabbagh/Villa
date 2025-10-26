@@ -54,9 +54,15 @@ namespace Villa_VillaAPI.Services
 
         }
 
-        public Task DeleteVillaNumber(int id)
+        public async Task<bool> DeleteVillaNumber(int id)
         {
-            throw new NotImplementedException();
+            var villaNumber = await _villaNumberRepository.GetVillaNumber(id);
+
+            if (villaNumber==null) return false;
+
+            await _villaNumberRepository.Delete(villaNumber);
+
+            return true;
         }
 
         public async Task<VillaNumberDTO> GetVillaNumber(int villaNo)

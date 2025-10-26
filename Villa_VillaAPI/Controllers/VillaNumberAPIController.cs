@@ -46,7 +46,7 @@ namespace Villa_VillaAPI.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
 
 
-        [HttpGet("{villaNo}",Name ="GetVillaNumber")]
+        [HttpGet("{villaNo}", Name = "GetVillaNumber")]
         public async Task<ActionResult<VillaNumberDTO>> GetVillaNumber(int villaNo)
         {
             APIResponse apiResponse = new APIResponse();
@@ -97,11 +97,46 @@ namespace Villa_VillaAPI.Controllers
 
                 return CreatedAtRoute("GetVillaNumber", new { villaNo = villaNumberDTO.VillaNo }, apiResponse);
             }
-            catch(InvalidOperationException invalidOperationEx)
+            catch (InvalidOperationException invalidOperationEx)
             {
                 _logger.LogError(invalidOperationEx, invalidOperationEx.Message);
                 apiResponse = _APIService.CreateFailureResponse(HttpStatusCode.Conflict, new List<string> { invalidOperationEx.Message });
                 return Conflict(apiResponse);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                apiResponse = _APIService.CreateFailureResponse(HttpStatusCode.InternalServerError, new List<string> { ex.Message });
+                return StatusCode(500, apiResponse);
+            }
+        }
+
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [HttpDelete("{villaNo}")]
+        public async Task<ActionResult<APIResponse>> DeleteVillaNumber(int? villaNo)
+        {
+            APIResponse apiResponse = new APIResponse();
+
+            try
+            {
+                if (villaNo == null || villaNo <= 0)
+                {
+                    apiResponse = _APIService.CreateFailureResponse(HttpStatusCode.BadRequest, new List<string> { $"invalid id" });
+                    return BadRequest(apiResponse);
+                }
+
+                bool isDeleted = await _villaNumberService.DeleteVillaNumber(villaNo.Value);
+                if (!isDeleted)
+                {
+                    apiResponse = _APIService.CreateFailureResponse(HttpStatusCode.NotFound, new List<string>() { "villa Number not found" });
+
+                    return NotFound(apiResponse);
+                }
+
+                return NoContent(); // success 
             }
             catch(Exception ex)
             {
@@ -109,6 +144,7 @@ namespace Villa_VillaAPI.Controllers
                 apiResponse = _APIService.CreateFailureResponse(HttpStatusCode.InternalServerError, new List<string> { ex.Message });
                 return StatusCode(500, apiResponse);
             }
+
         }
     }
 }
