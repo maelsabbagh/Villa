@@ -23,6 +23,9 @@ namespace Villa_VillaAPI
             CreateMap<VillaNumberCreateDTO, VillaNumber>()
                 .ForMember(dest => dest.CreatedDate, opt => opt.MapFrom(src => DateTime.Now));
 
+            CreateMap<VillaNumberUpdateDTO, VillaNumber>()
+                .ForMember(dest => dest.UpdatedDate, opt => opt.MapFrom(src => DateTime.Now));
+
 
                 
 

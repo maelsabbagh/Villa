@@ -44,6 +44,14 @@ namespace Villa_VillaAPI.Services
             return villaNumbersDTO;
         }
 
+        public async Task<VillaNumberDTO> GetVillaNumber(int villaNo)
+        {
+            VillaNumber villaNumber = await _villaNumberRepository.GetVillaNumber(villaNo);
+            VillaNumberDTO villaNumberDTO = _mapper.Map<VillaNumberDTO>(villaNumber);
+
+            return villaNumberDTO;
+        }
+
         public async Task<VillaNumberDTO> GetVillaNumber(Expression<Func<VillaNumber, bool>>? filter = null, bool isTracked = true)
         {
             VillaNumber villaNumber = await _villaNumberRepository.GetVillaNumber(filter, false);
@@ -65,12 +73,18 @@ namespace Villa_VillaAPI.Services
             return true;
         }
 
-        public async Task<VillaNumberDTO> GetVillaNumber(int villaNo)
-        {
-            VillaNumber villaNumber= await _villaNumberRepository.GetVillaNumber(villaNo);
-            VillaNumberDTO villaNumberDTO = _mapper.Map<VillaNumberDTO>(villaNumber);
+       
 
-            return villaNumberDTO;
+        public async Task<bool> UpdateVillaNumber(VillaNumberUpdateDTO villaNumberUpdateDTO)
+        {
+            VillaNumber villaNumber = await _villaNumberRepository.GetVillaNumber(villaNumberUpdateDTO.VillaNo.Value);
+
+            if (villaNumber == null) return false;
+
+            _mapper.Map(villaNumberUpdateDTO, villaNumber);
+
+            await _villaNumberRepository.Update(villaNumber);
+            return true;
         }
     }
 }

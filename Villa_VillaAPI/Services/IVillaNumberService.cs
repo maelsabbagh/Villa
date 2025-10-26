@@ -13,6 +13,7 @@ namespace Villa_VillaAPI.Services
         Task<VillaNumberDTO> AddVillaNumber(VillaNumberCreateDTO villaNumberCreateDTO);
 
         Task<bool> DeleteVillaNumber(int id);
+        Task<bool> UpdateVillaNumber(VillaNumberUpdateDTO villaNumberUpdateDTO);
 
     }
 }

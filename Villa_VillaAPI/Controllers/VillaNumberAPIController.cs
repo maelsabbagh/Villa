@@ -146,5 +146,37 @@ namespace Villa_VillaAPI.Controllers
             }
 
         }
+
+        [HttpPut("{villaNo}")]
+        public async Task<ActionResult<APIResponse>>UpdateVillaNumber(int villaNo, VillaNumberUpdateDTO villaNumberUpdate)
+        {
+            APIResponse apiResponse = new APIResponse();
+
+            try
+            {
+                if (villaNumberUpdate == null || villaNumberUpdate.VillaNo <= 0 || villaNo!= villaNumberUpdate.VillaNo)
+                {
+                    apiResponse = _APIService.CreateFailureResponse(HttpStatusCode.BadRequest, new List<string> { $"invalid data" });
+                    return BadRequest(apiResponse);
+                }
+
+                bool isUpdated = await _villaNumberService.UpdateVillaNumber(villaNumberUpdate);
+
+                if(!isUpdated)
+                {
+                    apiResponse = _APIService.CreateFailureResponse(HttpStatusCode.NotFound, new List<string>() { "villa Number not found" });
+
+                    return NotFound(apiResponse);
+                }
+
+                return NoContent(); // success
+            }
+            catch(Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                apiResponse = _APIService.CreateFailureResponse(HttpStatusCode.InternalServerError, new List<string> { ex.Message });
+                return StatusCode(500, apiResponse);
+            }
+        }
     }
 }
