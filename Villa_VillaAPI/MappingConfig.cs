@@ -19,6 +19,13 @@ namespace Villa_VillaAPI
                 .ForMember(dest => dest.Sqmt, opt => opt.MapFrom(src => src.Sqmt.GetValueOrDefault()))
                 .ForMember(dest => dest.Rate, opt => opt.MapFrom(src => src.Rate.GetValueOrDefault()));
 
+            CreateMap<VillaNumber, VillaNumberDTO>().ReverseMap();
+            CreateMap<VillaNumberCreateDTO, VillaNumber>()
+                .ForMember(dest => dest.CreatedDate, opt => opt.MapFrom(src => DateTime.Now));
+
+
+                
+
         }
     }
 }

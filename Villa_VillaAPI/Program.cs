@@ -18,7 +18,10 @@ builder.Services.AddDbContext<ApplicationDbContext>(option =>
 
 builder.Services.AddAutoMapper(typeof(MappingConfig));
 builder.Services.AddScoped<IVillaRepository, VillaRepository>();
+builder.Services.AddScoped<IVillaService, VillaService>();
 builder.Services.AddScoped<IAPIService, APIService>();
+builder.Services.AddScoped<IVillaNumberRepository, VillaNumberRepository>();
+builder.Services.AddScoped<IVillaNumberService, VillaNumberService>();
 
 Log.Logger = new LoggerConfiguration().MinimumLevel.Debug()
     .WriteTo.File("log/villaLogs.txt", rollingInterval: RollingInterval.Day).CreateLogger(); // logs in file each day
@@ -30,7 +33,6 @@ builder.Services.AddControllers()
    
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddScoped<IVillaService, VillaService>();
 
 var app = builder.Build();
 

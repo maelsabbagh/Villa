@@ -23,6 +23,7 @@ namespace Villa_VillaAPI.Controllers
 
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task <ActionResult<APIResponse>> GetVillas()
         {
             try
