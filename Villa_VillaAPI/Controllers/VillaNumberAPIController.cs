@@ -147,6 +147,10 @@ namespace Villa_VillaAPI.Controllers
 
         }
 
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [HttpPut("{villaNo}")]
         public async Task<ActionResult<APIResponse>>UpdateVillaNumber(int villaNo, VillaNumberUpdateDTO villaNumberUpdate)
         {
