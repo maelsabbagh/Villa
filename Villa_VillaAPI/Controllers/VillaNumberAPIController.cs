@@ -182,7 +182,13 @@ namespace Villa_VillaAPI.Controllers
 
                 return NoContent(); // success
             }
-            catch(Exception ex)
+            catch (KeyNotFoundException keyNotFoundEx)
+            {
+                _logger.LogError(keyNotFoundEx, keyNotFoundEx.Message);
+                apiResponse = _APIService.CreateFailureResponse(HttpStatusCode.NotFound, new List<string> { keyNotFoundEx.Message });
+                return NotFound(apiResponse);
+            }
+            catch (Exception ex)
             {
                 _logger.LogError(ex, ex.Message);
                 apiResponse = _APIService.CreateFailureResponse(HttpStatusCode.InternalServerError, new List<string> { ex.Message });

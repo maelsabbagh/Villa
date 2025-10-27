@@ -89,9 +89,20 @@ namespace Villa_VillaAPI.Services
 
         public async Task<bool> UpdateVillaNumber(VillaNumberUpdateDTO villaNumberUpdateDTO)
         {
+
+
             VillaNumber villaNumber = await _villaNumberRepository.GetVillaNumber(villaNumberUpdateDTO.VillaNo.Value);
 
             if (villaNumber == null) return false;
+
+            // check for foreign exists or not, if not throw an exception
+            bool isVillaExists = await _villaRepository.IsVillaExists(villaNumberUpdateDTO.VillaId.Value);
+
+            if (!isVillaExists)
+            {
+                throw new KeyNotFoundException($"Villa with Id {villaNumberUpdateDTO.VillaId} does not exist.");
+            }
+
 
             _mapper.Map(villaNumberUpdateDTO, villaNumber);
 
