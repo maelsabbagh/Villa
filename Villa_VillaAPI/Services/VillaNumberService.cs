@@ -11,11 +11,13 @@ namespace Villa_VillaAPI.Services
         private readonly IVillaNumberRepository _villaNumberRepository;
         private readonly IMapper _mapper;
         private readonly ILogger<VillaNumberService> _logger;
-        public VillaNumberService(ILogger<VillaNumberService> logger,IMapper mapper,IVillaNumberRepository villaNumberRepository)
+        private readonly IVillaRepository _villaRepository;
+        public VillaNumberService(ILogger<VillaNumberService> logger,IMapper mapper,IVillaNumberRepository villaNumberRepository,IVillaRepository villaRepository)
         {
             _logger = logger;
             _mapper = mapper;
             _villaNumberRepository = villaNumberRepository;
+            _villaRepository = villaRepository;
         }
 
         public async Task<VillaNumberDTO> AddVillaNumber(VillaNumberCreateDTO villaNumberCreateDTO)
@@ -26,6 +28,16 @@ namespace Villa_VillaAPI.Services
             {
                 throw new InvalidOperationException($"Villa number {villaNumberCreateDTO.VillaNo} already exists.");
             }
+
+            // check for foreign exists or not, if not throw an exception
+            bool isVillaExists = await _villaRepository.IsVillaExists(villaNumberCreateDTO.VillaId.Value);
+
+            if(!isVillaExists)
+            {
+                throw new KeyNotFoundException($"Villa with Id {villaNumberCreateDTO.VillaId} does not exist.");
+            }
+
+
             VillaNumber villaNumber = _mapper.Map<VillaNumber>(villaNumberCreateDTO);
             await _villaNumberRepository.Create(villaNumber);
 

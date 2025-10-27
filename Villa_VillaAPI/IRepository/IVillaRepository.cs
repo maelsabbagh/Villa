@@ -15,5 +15,7 @@ namespace Villa_VillaAPI.IRepository
 
         Task Save();
         Task DeleteVilla(Villa villa);
+
+        Task<bool> IsVillaExists(int id);
     }
 }

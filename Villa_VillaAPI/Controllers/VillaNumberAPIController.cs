@@ -80,6 +80,7 @@ namespace Villa_VillaAPI.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [HttpPost]
         public async Task<ActionResult<APIResponse>> CreateVillaNumber(VillaNumberCreateDTO villaNumberCreateDTO)
         {
@@ -102,6 +103,12 @@ namespace Villa_VillaAPI.Controllers
                 _logger.LogError(invalidOperationEx, invalidOperationEx.Message);
                 apiResponse = _APIService.CreateFailureResponse(HttpStatusCode.Conflict, new List<string> { invalidOperationEx.Message });
                 return Conflict(apiResponse);
+            }
+            catch (KeyNotFoundException keyNotFoundEx)  
+            {
+                _logger.LogError(keyNotFoundEx, keyNotFoundEx.Message);
+                apiResponse = _APIService.CreateFailureResponse(HttpStatusCode.NotFound, new List<string> { keyNotFoundEx.Message });
+                return NotFound(apiResponse);
             }
             catch (Exception ex)
             {

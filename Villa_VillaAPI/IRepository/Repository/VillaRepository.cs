@@ -85,6 +85,9 @@ namespace Villa_VillaAPI.IRepository.Repository
             return await query.ToListAsync();
         }
 
-       
+        public async Task<bool> IsVillaExists(int id)
+        {
+            return await  _context.Villas.AnyAsync(v => v.Id == id);
+        }
     }
 }
