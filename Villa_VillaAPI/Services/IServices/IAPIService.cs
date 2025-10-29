@@ -1,7 +1,7 @@
 ﻿using System.Net;
 using Villa_VillaAPI.Models;
 
-namespace Villa_VillaAPI.Services
+namespace Villa_VillaAPI.Services.IServices
 {
     public interface IAPIService
     {

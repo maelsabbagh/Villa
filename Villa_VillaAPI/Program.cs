@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Villa_VillaAPI;
 using Villa_VillaAPI.IRepository;
 using Villa_VillaAPI.IRepository.Repository;
+using Villa_VillaAPI.Services.IServices;
 
 var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
