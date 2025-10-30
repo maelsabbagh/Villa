@@ -1,4 +1,5 @@
-﻿using Villa_Villa_WebApp.Models.DTO;
+﻿using System.Reflection.Metadata.Ecma335;
+using Villa_Villa_WebApp.Models.DTO;
 using Villa_WebApp.Models.DTO;
 using Villa_WebApp.Services.IServices;
 using static Villa_Utility.StaticDetails;
@@ -39,12 +40,14 @@ namespace Villa_WebApp.Services
 
         public async Task<T> GetAllAsync<T>()
         {
-            return await SendAsync<T>(new Models.APIRequest()
+
+            var response = await SendAsync<T>(new Models.APIRequest()
             {
                 ApiType = ApiType.GET,
                 URL = backendUrl,
                 Data = null
             });
+            return response;
         }
 
         public async Task<T> GetAsync<T>(int id)
