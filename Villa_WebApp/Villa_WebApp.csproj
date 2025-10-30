@@ -16,4 +16,8 @@
     <ProjectReference Include="..\Villa_Utility\Villa_Utility.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\lib\bootstrap-icons\" />
+  </ItemGroup>
+
 </Project>
