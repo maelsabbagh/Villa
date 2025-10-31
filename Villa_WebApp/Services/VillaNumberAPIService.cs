@@ -18,7 +18,7 @@ namespace Villa_WebApp.Services
             backendUrl = backendUrl + apiUrl;
         }
 
-        public async Task<T> CreateAsync<T>(VillaNumberDTO villaNumberDTO)
+        public async Task<T> CreateAsync<T>(VillaNumberCreateDTO villaNumberDTO)
         {
             var response = await SendAsync<T>(new APIRequest()
             {
