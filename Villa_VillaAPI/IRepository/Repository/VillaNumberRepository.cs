@@ -44,7 +44,6 @@ namespace Villa_VillaAPI.IRepository.Repository
         public async Task<VillaNumber> GetVillaNumber(int villaNo)
         {
             return await _context.VillaNumbers
-                .AsNoTracking()
                 .Include(v=>v.Villa)
                 .FirstOrDefaultAsync(v => v.VillaNo == villaNo);
         }
