@@ -33,7 +33,7 @@ namespace Villa_WebApp.Services
             return await SendAsync<T>(new Models.APIRequest()
             {
                 ApiType = ApiType.DELETE,
-                URL = $"{backendUrl} +/{id}",
+                URL = $"{backendUrl}/{id}",
                 Data = null
             });
         }

@@ -85,6 +85,7 @@ namespace Villa_WebApp.Controllers
             }
         }
 
+        [HttpGet]
         public async Task<IActionResult> UpdateVilla(int villaId)
         {
             try
@@ -136,6 +137,39 @@ namespace Villa_WebApp.Controllers
                 _logger.LogError(ex, ex.Message);
                 return View("Error");
             }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> DeleteVilla(int villaId)
+        {
+            var response = await _villaAPIService.GetAsync<APIResponse>(villaId);
+            VillaDTO villaDTO = null;
+            if (response != null && response.isSuccess)
+            {
+                string responseString = Convert.ToString(response.Result);
+                villaDTO = JsonConvert.DeserializeObject<VillaDTO>(responseString);
+                return View(villaDTO);
+            }
+            else
+            {
+                string errorLog = $"delete villa in villa Controller received error response";
+                _logger.LogError("errorLog");
+                return View("Error");
+            }
+        }
+
+
+        [HttpPost]
+        public async Task<IActionResult>DeleteVilla(VillaDTO villaDTO)
+        {
+            int villaId = villaDTO.Id;
+            if (villaId <= 0) return View("Error");
+            var response =await _villaAPIService.DeleteAsync<APIResponse>(villaId);
+            if(response!=null &&response.isSuccess)
+            {
+                return RedirectToAction(nameof(Index));
+            }
+            return View("Error");
         }
     }
 }
