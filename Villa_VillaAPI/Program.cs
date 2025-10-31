@@ -30,8 +30,11 @@ Log.Logger = new LoggerConfiguration().MinimumLevel.Debug()
 builder.Host.UseSerilog(); // when an instance of logger is requested, dependency injection will provide a serilog instance
 
 builder.Services.AddControllers()
-    .AddNewtonsoftJson();
-   
+    .AddNewtonsoftJson(options =>
+    {
+        options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+    });
+
 builder.Services.AddSwaggerGen();
 
 

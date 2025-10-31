@@ -31,7 +31,8 @@ namespace Villa_VillaAPI.IRepository.Repository
         {
             IQueryable<VillaNumber> query = _context.VillaNumbers
                 .AsNoTracking();
-           
+
+            query = query.Include(v=>v.Villa);
             if(filter!=null)
             {
                 query = query.Where(filter);
@@ -44,6 +45,7 @@ namespace Villa_VillaAPI.IRepository.Repository
         {
             return await _context.VillaNumbers
                 .AsNoTracking()
+                .Include(v=>v.Villa)
                 .FirstOrDefaultAsync(v => v.VillaNo == villaNo);
         }
 
