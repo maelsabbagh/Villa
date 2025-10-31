@@ -26,7 +26,6 @@ namespace Villa_WebApp.Controllers
             {
                 List<VillaDTO> villaList = new List<VillaDTO>();
                 var response = await _villaAPIService.GetAllAsync<APIResponse>();
-
                 if (response != null && response.isSuccess)
                 {
                     villaList = JsonConvert.DeserializeObject<List<VillaDTO>>(Convert.ToString(response.Result));
