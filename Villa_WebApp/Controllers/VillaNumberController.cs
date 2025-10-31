@@ -76,6 +76,33 @@ namespace Villa_WebApp.Controllers
                     {
                         return RedirectToAction(nameof(Index));
                     }
+                    else
+                    {
+                        if(response.ErrorMessage.Count>0)
+                        {
+                            ModelState.AddModelError("Error", response.ErrorMessage.FirstOrDefault());
+                        }
+                        // Villa List in vm is not populated
+                        // we need to populate it when displaying an error 
+                        // so user can re-select
+
+                        var villaResponse = await _villaAPIService.GetAllAsync<APIResponse>();
+                        if (villaResponse != null && villaResponse.isSuccess)
+                        {
+                            string resultString = Convert.ToString(villaResponse.Result);
+                            var villaList = JsonConvert.DeserializeObject<List<VillaDTO>>(resultString);
+                            vm.VillaList = villaList.Select(i => new SelectListItem
+                            {
+                                Text = i.Name,
+                                Value = i.Id.ToString()
+                            });
+
+                            return View(vm);
+                        }
+
+                        return View("Error");
+                    }
+
                 }
                 return View("Error");
             }
