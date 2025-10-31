@@ -142,8 +142,10 @@ namespace Villa_VillaAPI.Controllers
 
                     return NotFound(apiResponse);
                 }
+                apiResponse = _APIService.CreateSuccessResponse(HttpStatusCode.OK, new { });
 
-                return NoContent(); // success 
+
+                return Ok(apiResponse);
             }
             catch(Exception ex)
             {
@@ -180,7 +182,8 @@ namespace Villa_VillaAPI.Controllers
                     return NotFound(apiResponse);
                 }
 
-                return NoContent(); // success
+                apiResponse = _APIService.CreateSuccessResponse(HttpStatusCode.OK, new { });
+                return Ok(apiResponse);
             }
             catch (KeyNotFoundException keyNotFoundEx)
             {
