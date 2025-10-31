@@ -9,7 +9,7 @@ namespace Villa_WebApp.Services
 {
     public class APIService : IAPIService
     {
-        protected const string apiUrl = "/api/VillaAPI";
+        
         public APIResponse responseModel { get; set; }
         public IHttpClientFactory _httpClient { get; set; }
         private readonly ILogger<APIService> _logger;

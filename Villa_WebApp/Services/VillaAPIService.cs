@@ -8,7 +8,7 @@ namespace Villa_WebApp.Services
 {
     public class VillaAPIService : APIService, IVillaAPIService
     {
-        
+        protected const string apiUrl = "/api/VillaAPI";
         private string backendUrl;
         private readonly IConfiguration _configuration;
         public VillaAPIService(IHttpClientFactory httpClientFactory, ILogger<APIService> logger,IConfiguration configuration) : base(httpClientFactory, logger)

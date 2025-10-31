@@ -6,12 +6,14 @@ using static Villa_Utility.StaticDetails;
 
 namespace Villa_WebApp.Services
 {
-    public class VillNumberAPIService : APIService,IVillaNumberAPIService  
+    public class VillaNumberAPIService : APIService,IVillaNumberAPIService  
     {
+        protected const string apiUrl = "/api/VillaNumberAPI";
         private string backendUrl;
         private readonly IConfiguration _configuration;
-        public VillNumberAPIService(IHttpClientFactory httpClientFactory, ILogger<APIService> logger,IConfiguration configuration) : base(httpClientFactory, logger)
+        public VillaNumberAPIService(IHttpClientFactory httpClientFactory, ILogger<APIService> logger,IConfiguration configuration) : base(httpClientFactory, logger)
         {
+            _configuration = configuration;
             backendUrl = _configuration.GetValue<string>("ServiceUrls:VillaAPI")!;
             backendUrl = backendUrl + apiUrl;
         }
