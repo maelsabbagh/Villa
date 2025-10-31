@@ -132,7 +132,8 @@ namespace Villa_VillaAPI.Controllers
                     return NotFound(response);
                 }
 
-                return NoContent();
+                var SuccessResponse = _APIService.CreateSuccessResponse(HttpStatusCode.OK, new {});
+                return Ok(SuccessResponse);
             }
             catch (Exception ex)
             {
@@ -166,7 +167,8 @@ namespace Villa_VillaAPI.Controllers
                     return NotFound(response);
                 }
 
-                return NoContent();
+                var SuccessResponse = _APIService.CreateSuccessResponse(HttpStatusCode.OK, new { });
+                return Ok(SuccessResponse);
             }
             catch (Exception ex)
             {
