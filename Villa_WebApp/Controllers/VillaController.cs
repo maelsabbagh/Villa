@@ -14,13 +14,13 @@ namespace Villa_WebApp.Controllers
         private readonly ILogger<VillaController> _logger;
         private readonly IMapper _mapper;
 
-        public VillaController(IVillaAPIService villaAPIService,ILogger<VillaController>logger,IMapper mapper)
+        public VillaController(IVillaAPIService villaAPIService, ILogger<VillaController> logger, IMapper mapper)
         {
             _villaAPIService = villaAPIService;
             _logger = logger;
             _mapper = mapper;
         }
-        public async Task <IActionResult> Index()
+        public async Task<IActionResult> Index()
         {
             try
             {
@@ -33,7 +33,7 @@ namespace Villa_WebApp.Controllers
                 }
                 return View(villaList);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 _logger.LogError(ex, ex.Message);
                 return View("Error");
@@ -41,13 +41,13 @@ namespace Villa_WebApp.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult>CreateVilla() 
+        public async Task<IActionResult> CreateVilla()
         {
             try
             {
                 return View();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 _logger.LogError(ex, ex.Message);
                 return View("Error");
@@ -56,16 +56,16 @@ namespace Villa_WebApp.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult>CreateVilla(VillaCreateDTO villaCreateDTO)
+        public async Task<IActionResult> CreateVilla(VillaCreateDTO villaCreateDTO)
         {
             try
             {
-                if(!ModelState.IsValid)
+                if (!ModelState.IsValid)
                 {
                     return View(villaCreateDTO);
                 }
-               
-                var apiResponse= await _villaAPIService.CreateAsync<APIResponse>(villaCreateDTO);
+
+                var apiResponse = await _villaAPIService.CreateAsync<APIResponse>(villaCreateDTO);
                 if (apiResponse != null && apiResponse.isSuccess)
                 {
                     return RedirectToAction(nameof(Index));
@@ -79,6 +79,59 @@ namespace Villa_WebApp.Controllers
 
             }
             catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return View("Error");
+            }
+        }
+
+        public async Task<IActionResult> UpdateVilla(int villaId)
+        {
+            try
+            {
+                if (villaId <= 0) return View("Error");
+                VillaDTO villaDTO = null;
+                VillaUpdateDTO villaUpdate = null;
+                var response = await _villaAPIService.GetAsync<APIResponse>(villaId);
+                if (response != null && response.isSuccess)
+                {
+                    string responseString = Convert.ToString(response.Result);
+                    villaDTO = JsonConvert.DeserializeObject<VillaDTO>(responseString);
+                     villaUpdate =  _mapper.Map<VillaUpdateDTO>(villaDTO);
+                }
+                else
+                {
+                    string errorLog = $"update villa in villa Controller received error response";
+                    _logger.LogError("errorLog");
+                    return View("Error");
+                }
+
+                return View(villaUpdate);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return View("Error");
+            }
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> UpdateVilla(VillaUpdateDTO villaDto)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    var apiResponse = await _villaAPIService.UpdateAsync<APIResponse>(villaDto);
+                    if (apiResponse != null && apiResponse.isSuccess)
+                    {
+                        return RedirectToAction(nameof(Index));
+                    }
+
+                }
+                return View("Error");
+            }
+            catch(Exception ex)
             {
                 _logger.LogError(ex, ex.Message);
                 return View("Error");

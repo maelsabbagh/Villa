@@ -55,19 +55,20 @@ namespace Villa_WebApp.Services
             return await SendAsync<T>(new Models.APIRequest()
             {
                 ApiType = ApiType.GET,
-                URL = $"{backendUrl} +/{id}",
+                URL = $"{backendUrl}/{id}",
                 Data = null
             });
         }
 
         public async Task<T> UpdateAsync<T>(VillaUpdateDTO villaUpdateDTO)
         {
-            return await SendAsync<T>(new Models.APIRequest()
+            var response =  await SendAsync<T>(new Models.APIRequest()
             {
                 ApiType = ApiType.PUT,
-                URL = $"{backendUrl} +/{villaUpdateDTO.Id}",
+                URL = $"{backendUrl}/{villaUpdateDTO.Id}",
                 Data = villaUpdateDTO
             });
+            return response;
         }
     }
 }
