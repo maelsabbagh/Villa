@@ -14,7 +14,7 @@ namespace Villa_VillaAPI.Models
         public int Sqmt { get; set; } //square meter
         public int Occupancy { get; set; }
         public string ImageURL { get; set; }
-        public string Amenity { get; set; }
+        public string? Amenity { get; set; }
         public DateTime CreatedDate { get; set; }
         public DateTime UpdatedDate { get; set; }
 

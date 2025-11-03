@@ -21,6 +21,6 @@ namespace Villa_WebApp.Models.DTO
         public int Occupancy { get; set; }
         [Required]
         public string ImageURL { get; set; }
-        public string Amenity { get; set; }
+        public string? Amenity { get; set; }
     }
 }

@@ -68,7 +68,7 @@ namespace Villa_WebApp.Services
         {
             var response = await SendAsync<T>(new APIRequest()
             {
-                ApiType = ApiType.DELETE,
+                ApiType = ApiType.PUT,
                 Data = villaNumberUpdateDTO,
                 URL = $"{backendUrl}/{villaNumberUpdateDTO.VillaNo}"
             });
