@@ -78,6 +78,7 @@ namespace Villa_WebApp.Controllers
                     var response = await _villaNumberAPIService.CreateAsync<APIResponse>(vm.VillaNumber);
                     if (response != null && response.isSuccess)
                     {
+                        TempData["success"] = "Villa Number created successfully";
                         return RedirectToAction(nameof(Index));
                     }
                     else
@@ -166,6 +167,7 @@ namespace Villa_WebApp.Controllers
                     var response = await _villaNumberAPIService.UpdateAsync<APIResponse>(vm.VillaNumber);
                     if (response != null && response.isSuccess)
                     {
+                        TempData["success"] = "Villa Number Updated successfully";
                         return RedirectToAction(nameof(Index));
                     }
                     else
@@ -228,6 +230,7 @@ namespace Villa_WebApp.Controllers
             var response = await _villaNumberAPIService.DeleteAsync<APIResponse>(villaNumber.VillaNo.Value);
             if (response != null && response.isSuccess)
             {
+                TempData["success"] = "Villa Number deleted successfully";
                 return RedirectToAction(nameof(Index));
             }
 

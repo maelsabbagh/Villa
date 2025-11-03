@@ -67,6 +67,7 @@ namespace Villa_WebApp.Controllers
                 var apiResponse = await _villaAPIService.CreateAsync<APIResponse>(villaCreateDTO);
                 if (apiResponse != null && apiResponse.isSuccess)
                 {
+                    TempData["success"] = "Villa created successfully";
                     return RedirectToAction(nameof(Index));
                 }
 
@@ -80,6 +81,7 @@ namespace Villa_WebApp.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, ex.Message);
+                TempData["error"] = "Error";
                 return View("Error");
             }
         }
@@ -125,14 +127,17 @@ namespace Villa_WebApp.Controllers
                     var apiResponse = await _villaAPIService.UpdateAsync<APIResponse>(villaDto);
                     if (apiResponse != null && apiResponse.isSuccess)
                     {
+                        TempData["success"] = "Villa updated successfully";
                         return RedirectToAction(nameof(Index));
                     }
 
                 }
+                TempData["error"] = "Error";
                 return View("Error");
             }
             catch(Exception ex)
             {
+                TempData["error"] = "Error";
                 _logger.LogError(ex, ex.Message);
                 return View("Error");
             }
@@ -166,8 +171,10 @@ namespace Villa_WebApp.Controllers
             var response =await _villaAPIService.DeleteAsync<APIResponse>(villaId);
             if(response!=null &&response.isSuccess)
             {
+                TempData["success"] = "Villa deleted successfully";
                 return RedirectToAction(nameof(Index));
             }
+            TempData["error"] = "Error";
             return View("Error");
         }
     }
