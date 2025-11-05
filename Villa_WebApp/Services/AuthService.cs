@@ -37,7 +37,7 @@ namespace Villa_WebApp.Services
             {
                 ApiType = ApiType.POST,
                 Data = registrationRequestDTO,
-                URL = $"{backendUrl} /register"
+                URL = $"{backendUrl}/register"
             };
 
             return await SendAsync<T>(apiRequest);
