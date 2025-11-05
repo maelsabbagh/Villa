@@ -50,8 +50,16 @@ namespace Villa_VillaAPI.Controllers
             try
             {
                 var registerResponse = await _userService.Register(registrationRequestDTO);
-                response = _APIService.CreateSuccessResponse(HttpStatusCode.OK, registerResponse);
-                return Ok(response);
+                if (registerResponse != null)
+                {
+                    response = _APIService.CreateSuccessResponse(HttpStatusCode.OK, new { });
+                    return Ok(response);
+                }
+                else
+                {
+                    response = _APIService.CreateFailureResponse(HttpStatusCode.BadRequest,new List<string>());
+                    return BadRequest(response);
+                }
 
             }
             catch(InvalidOperationException InvalidOpEx)
