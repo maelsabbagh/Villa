@@ -25,7 +25,7 @@ namespace Villa_WebApp.Services
             {
                 ApiType = ApiType.POST,
                 Data = loginRequestDTO,
-                URL = $"backendUrl/login"
+                URL = $"{backendUrl}/login"
             };
 
            return await SendAsync<T>(apiRequest);
@@ -37,7 +37,7 @@ namespace Villa_WebApp.Services
             {
                 ApiType = ApiType.POST,
                 Data = registrationRequestDTO,
-                URL = $"backendUrl/register"
+                URL = $"{backendUrl} /register"
             };
 
             return await SendAsync<T>(apiRequest);
