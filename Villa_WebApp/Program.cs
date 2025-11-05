@@ -14,6 +14,9 @@ builder.Services.AddScoped<IVillaAPIService, VillaAPIService>();
 builder.Services.AddHttpClient<IVillaNumberAPIService, VillaNumberAPIService>();
 builder.Services.AddScoped<IVillaNumberAPIService, VillaNumberAPIService>();
 
+builder.Services.AddHttpClient<IAuthService, AuthService>();
+builder.Services.AddScoped<IAuthService, AuthService>();
+
 var app = builder.Build();
 
 

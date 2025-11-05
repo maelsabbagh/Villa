@@ -1,7 +1,5 @@
 ﻿namespace Villa_Villa_WebApp.Models.DTO
-
-namespace Villa_VillaAPI.Models.DTO
-{
+{ 
     public class RegistrationRequestDTO
     {
         
