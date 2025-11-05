@@ -4,6 +4,7 @@ using Villa_VillaAPI.Models.DTO;
 using System.Net;
 using Villa_VillaAPI.Models;
 using Villa_VillaAPI.Services.IServices;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Villa_VillaAPI.Controllers
 {
@@ -76,6 +77,8 @@ namespace Villa_VillaAPI.Controllers
                 return StatusCode(500, apiResponse);
             }
         }
+
+        [Authorize(Roles = "admin")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -118,6 +121,7 @@ namespace Villa_VillaAPI.Controllers
             }
         }
 
+        [Authorize(Roles = "admin")]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
@@ -156,6 +160,7 @@ namespace Villa_VillaAPI.Controllers
 
         }
 
+        [Authorize(Roles = "admin")]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
