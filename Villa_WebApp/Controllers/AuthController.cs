@@ -1,8 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
+using Villa_Utility;
 using Villa_Villa_WebApp.Models.DTO;
 using Villa_WebApp.Models;
 using Villa_WebApp.Services.IServices;
-
+using static Villa_Utility.StaticDetails;
 namespace Villa_WebApp.Controllers
 {
     public class AuthController : Controller
@@ -31,9 +35,23 @@ namespace Villa_WebApp.Controllers
             if(ModelState.IsValid)
             {
                 var apiResponse = await _authService.LoginAsync<APIResponse>(loginRequestDTO);
+
+                if (apiResponse != null && apiResponse.isSuccess)
+                {
+                    LoginResponseDTO loginResponse = JsonConvert.DeserializeObject<LoginResponseDTO>(Convert.ToString(apiResponse.Result)!)!;
+
+                    HttpContext.Session.SetString(StaticDetails.SessionToken, loginResponse.Token);
+                    return RedirectToAction("Index", "Home");
+                }
+                else
+                {
+                    ModelState.AddModelError("Error", apiResponse!.ErrorMessage!.FirstOrDefault()!);
+                    return View(loginRequestDTO);
+                }
             }
 
-            return View();
+            ModelState.AddModelError("Error", "Error with data you have entered ");
+            return View(loginRequestDTO);
         }
 
         [HttpGet]
@@ -49,19 +67,29 @@ namespace Villa_WebApp.Controllers
         {
             if (ModelState.IsValid)
             {
+                registrationRequestDTO.Role = "user";
                 var apiResponse = await _authService.RegisterAsync<APIResponse>(registrationRequestDTO);
-                if(apiResponse!=null && apiResponse.isSuccess)
+                if (apiResponse != null && apiResponse.isSuccess)
                 {
                     return RedirectToAction(nameof(Login));
                 }
+                else
+                {
+                    ModelState.AddModelError("Error", apiResponse!.ErrorMessage!.FirstOrDefault()!);
+                    return View(registrationRequestDTO);
+                }
             }
-            return View();
+
+            ModelState.AddModelError("Error", "Error with data you have entered ");
+            return View(registrationRequestDTO);
         }
 
         [HttpGet]
         public async Task<IActionResult>Logout()
         {
-            return View();
+            await HttpContext.SignOutAsync();
+            HttpContext.Session.SetString(StaticDetails.SessionToken, ""); // empty the session jwt token
+            return RedirectToAction("Index", "Home");
         }
 
         [HttpGet]

@@ -10,6 +10,6 @@ namespace Villa_VillaAPI.Models.DTO
         public string Name { get; set; }
         [Required]
         public string Password { get; set; }
-        public string Role { get; set; }
+        public string? Role { get; set; }
     }
 }

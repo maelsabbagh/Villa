@@ -16,6 +16,7 @@ namespace Villa_VillaAPI.IRepository.Repository
         public async Task<LocalUser> Login(LoginRequestDTO loginRequestDTO)
         {
             var user = await _context.LocalUsers.FirstOrDefaultAsync(u => (u.UserName == loginRequestDTO.UserName && u.Password == loginRequestDTO.Password));
+            user!.Password = "";
             return user;
         }
 
