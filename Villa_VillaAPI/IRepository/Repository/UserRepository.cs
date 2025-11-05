@@ -40,11 +40,6 @@ namespace Villa_VillaAPI.IRepository.Repository
             }
         }
 
-        //public Task<LoginResponseDTO> Login(LoginRequestDTO loginRequestDTO)
-        //{
-        //    throw new NotImplementedException();
-        //}
-
         public async Task<LocalUser> Register(LocalUser user)
         {
             await _context.LocalUsers.AddAsync(user);
