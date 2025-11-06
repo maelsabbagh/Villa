@@ -25,6 +25,7 @@ namespace Villa_VillaAPI.Controllers
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [ResponseCache(Duration =30)]
         public async Task <ActionResult<APIResponse>> GetVillas()
         {
             try
@@ -47,6 +48,7 @@ namespace Villa_VillaAPI.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [ResponseCache(Duration = 30)]
         public async Task<ActionResult<APIResponse>> getVilla(int id)
         {
             if (id <= 0)

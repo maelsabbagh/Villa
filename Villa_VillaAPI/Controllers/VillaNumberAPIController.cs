@@ -26,6 +26,7 @@ namespace Villa_VillaAPI.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [HttpGet]
+        [ResponseCache(Duration = 30)]
         public async Task<ActionResult<IEnumerable<VillaNumberDTO>>> GetVillaNumbers()
         {
             try
@@ -45,6 +46,7 @@ namespace Villa_VillaAPI.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ResponseCache(Duration = 30)]
 
 
         [HttpGet("{villaNo}", Name = "GetVillaNumber")]

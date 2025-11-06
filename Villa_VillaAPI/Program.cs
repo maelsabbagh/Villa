@@ -54,6 +54,8 @@ builder.Services.AddAuthentication(x =>
     });
 
 
+builder.Services.AddResponseCaching();
+
 Log.Logger = new LoggerConfiguration().MinimumLevel.Debug()
     .WriteTo.File("log/villaLogs.txt", rollingInterval: RollingInterval.Day).CreateLogger(); // logs in file each day
 
