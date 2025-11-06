@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Villa_Villa_WebApp.Models.DTO;
@@ -39,6 +40,7 @@ namespace Villa_WebApp.Controllers
             }
         }
 
+        [Authorize(Roles = "admin")]
         [HttpGet]
         public async Task<IActionResult> CreateVilla()
         {
@@ -53,6 +55,7 @@ namespace Villa_WebApp.Controllers
             }
         }
 
+        [Authorize(Roles = "admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CreateVilla(VillaCreateDTO villaCreateDTO)
@@ -86,6 +89,7 @@ namespace Villa_WebApp.Controllers
             }
         }
 
+        [Authorize(Roles = "admin")]
         [HttpGet]
         public async Task<IActionResult> UpdateVilla(int villaId)
         {
@@ -116,6 +120,7 @@ namespace Villa_WebApp.Controllers
                 return View("Error");
             }
         }
+        [Authorize(Roles = "admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> UpdateVilla(VillaUpdateDTO villaDto)
@@ -143,6 +148,7 @@ namespace Villa_WebApp.Controllers
             }
         }
 
+        [Authorize(Roles = "admin")]
         [HttpGet]
         public async Task<IActionResult> DeleteVilla(int villaId)
         {
@@ -163,6 +169,7 @@ namespace Villa_WebApp.Controllers
         }
 
 
+        [Authorize(Roles = "admin")]
         [HttpPost]
         public async Task<IActionResult>DeleteVilla(VillaDTO villaDTO)
         {

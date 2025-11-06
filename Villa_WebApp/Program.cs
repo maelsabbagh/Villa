@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Villa_WebApp;
 using Villa_WebApp.Services;
 using Villa_WebApp.Services.IServices;
@@ -18,6 +19,18 @@ builder.Services.AddHttpClient<IAuthService, AuthService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 
 builder.Services.AddDistributedMemoryCache();
+
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+.AddCookie(options =>
+{
+    options.Cookie.HttpOnly = true;
+    options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
+    options.LoginPath = "/Auth/Login";
+    options.AccessDeniedPath = "/Auth/AccessDenied";
+    options.SlidingExpiration = true;
+    
+
+});
 
 builder.Services.AddSession(options =>
 {
@@ -42,6 +55,7 @@ if (!app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 app.UseSession();
 
