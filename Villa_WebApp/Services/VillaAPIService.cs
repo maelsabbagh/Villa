@@ -11,7 +11,7 @@ namespace Villa_WebApp.Services
         protected const string apiUrl = "/api/VillaAPI";
         private string backendUrl;
         private readonly IConfiguration _configuration;
-        public VillaAPIService(IHttpClientFactory httpClientFactory, ILogger<APIService> logger,IConfiguration configuration) : base(httpClientFactory, logger)
+        public VillaAPIService(IHttpClientFactory httpClientFactory, ILogger<APIService> logger,IConfiguration configuration, IHttpContextAccessor httpContextAccessor) : base(httpClientFactory, logger, httpContextAccessor)
         {
             _configuration = configuration;
             backendUrl = _configuration.GetValue<string>("ServiceUrls:VillaAPI")!;

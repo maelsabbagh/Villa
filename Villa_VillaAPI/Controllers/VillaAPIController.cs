@@ -8,7 +8,7 @@ using Villa_VillaAPI.Services.IServices;
 namespace Villa_VillaAPI.Controllers
 {
     [ApiController]
-    [Route("api/VillaAPI")]
+    [Route("api/VillaAPI")]    
     public class VillaAPIController : ControllerBase
     {
         private readonly IVillaService _villaService;

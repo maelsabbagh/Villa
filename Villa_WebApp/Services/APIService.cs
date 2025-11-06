@@ -4,6 +4,7 @@ using Villa_WebApp.Services.IServices;
 using System.Text;
 using static Villa_Utility.StaticDetails;
 using System.Net;
+using System.Net.Http.Headers;
 
 namespace Villa_WebApp.Services
 {
@@ -13,11 +14,14 @@ namespace Villa_WebApp.Services
         public APIResponse responseModel { get; set; }
         public IHttpClientFactory _httpClient { get; set; }
         private readonly ILogger<APIService> _logger;
-        public APIService(IHttpClientFactory httpClientFactory,ILogger<APIService>logger)
+        private readonly IHttpContextAccessor _httpContext;
+        
+        public APIService(IHttpClientFactory httpClientFactory,ILogger<APIService>logger, IHttpContextAccessor httpContext)
         {
             responseModel = new APIResponse();
             _httpClient = httpClientFactory;
             _logger = logger;
+            _httpContext = httpContext;
 
         }
 
@@ -58,6 +62,12 @@ namespace Villa_WebApp.Services
                 }
 
                 HttpResponseMessage apiResponse = null;
+
+                string? token = _httpContext?.HttpContext.Session.GetString(SessionToken);
+                if (!string.IsNullOrEmpty(token))
+                {
+                    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                }
                 apiResponse = await client.SendAsync(message);
                 
                 var apiContent = await apiResponse.Content.ReadAsStringAsync();

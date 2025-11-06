@@ -12,7 +12,7 @@ namespace Villa_WebApp.Services
         private string backendUrl;
         private readonly IConfiguration _configuration;
         private string apiUrl = "/api/User";
-        public AuthService(IHttpClientFactory httpClientFactory, ILogger<APIService> logger,IConfiguration configuration) : base(httpClientFactory, logger)
+        public AuthService(IHttpClientFactory httpClientFactory, ILogger<APIService> logger,IConfiguration configuration,IHttpContextAccessor httpContextAccessor) : base(httpClientFactory, logger, httpContextAccessor)
         {
             _configuration = configuration;
             backendUrl = _configuration.GetValue<string>("ServiceUrls:VillaAPI")!;

@@ -8,7 +8,7 @@ using Villa_WebApp.Models.DTO;
 using Villa_WebApp.Services.IServices;
 
 namespace Villa_WebApp.Controllers
-{
+{    
     public class VillaController : Controller
     {
         private readonly IVillaAPIService _villaAPIService;
