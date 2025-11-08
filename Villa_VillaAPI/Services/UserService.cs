@@ -53,7 +53,7 @@ namespace Villa_VillaAPI.Services
             {
                 Token = writtenToken,
                 User = _mapper.Map<UserDTO>(user),
-                Role= roles.FirstOrDefault()!
+                
             };
             return loginResponseDTO;
         }
@@ -70,7 +70,7 @@ namespace Villa_VillaAPI.Services
             {
                 Subject = new ClaimsIdentity(new Claim[]
                 {
-                    new Claim(ClaimTypes.Name,user.Id.ToString()),
+                    new Claim(ClaimTypes.Name,user.UserName.ToString()),
                     new Claim(ClaimTypes.Role,roles.FirstOrDefault()!)
                 }),
                 Expires = DateTime.UtcNow.AddDays(7),
