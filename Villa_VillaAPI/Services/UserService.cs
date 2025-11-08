@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
+using System.Collections.Frozen;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -115,7 +116,15 @@ namespace Villa_VillaAPI.Services
                 }
                 else
                 {
-                    throw new Exception($"{result.Errors.FirstOrDefault()}");
+                    string errorMessage = "";
+                    foreach (var err in result.Errors.ToList())
+                    { 
+                        errorMessage = errorMessage + $"{err.Description}\n";
+                    }
+                
+
+                
+                    throw new Exception($"{errorMessage}");
                 }  
             
 
