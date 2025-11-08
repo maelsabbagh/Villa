@@ -7,6 +7,6 @@ namespace Villa_VillaAPI.Services.IServices
     {
         Task<bool> isUniqueUser(string userName);
         Task<LoginResponseDTO> Login(LoginRequestDTO loginRequestDTO);
-        Task<LocalUser> Register(RegistrationRequestDTO registrationRequestDTO);
+        Task<UserDTO> Register(RegistrationRequestDTO registrationRequestDTO);
     }
 }

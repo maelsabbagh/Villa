@@ -52,7 +52,7 @@ namespace Villa_VillaAPI.Controllers
                 var registerResponse = await _userService.Register(registrationRequestDTO);
                 if (registerResponse != null)
                 {
-                    response = _APIService.CreateSuccessResponse(HttpStatusCode.OK, new { });
+                    response = _APIService.CreateSuccessResponse(HttpStatusCode.OK, registerResponse);
                     return Ok(response);
                 }
                 else

@@ -1,8 +1,11 @@
-﻿using Microsoft.AspNetCore.Http.HttpResults;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using System.Threading.Tasks;
 using Villa_VillaAPI.IRepository;
 using Villa_VillaAPI.Models;
 using Villa_VillaAPI.Models.DTO;
@@ -15,12 +18,17 @@ namespace Villa_VillaAPI.Services
         private readonly IUserRepository _userRepository;
         private readonly ILogger<UserService> _logger;
         private readonly IConfiguration _configuration;
-        public UserService(ILogger<UserService> logger,IUserRepository userRepository, IConfiguration configuration)
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly IMapper _mapper;
+        public UserService(ILogger<UserService> logger,IUserRepository userRepository, IConfiguration configuration, UserManager<ApplicationUser> userManager,IMapper mapper, RoleManager<IdentityRole> roleManager)
         {
             _logger = logger;
             _userRepository = userRepository;
             _configuration = configuration;
-         
+            _userManager = userManager;
+            _mapper = mapper;
+            _roleManager = roleManager;
         }
         public async Task<bool> isUniqueUser(string userName)
         {
@@ -30,30 +38,31 @@ namespace Villa_VillaAPI.Services
 
         public async Task<LoginResponseDTO> Login(LoginRequestDTO loginRequestDTO)
         {
-            bool isValidUser = await _userRepository.isValidUser(loginRequestDTO.UserName, loginRequestDTO.Password);
+            ApplicationUser user = await _userRepository.ValidateUser(loginRequestDTO.UserName, loginRequestDTO.Password);
 
-            if (!isValidUser) throw new UnauthorizedAccessException($"UserName or password are not valid");
-
-
-            var user = await _userRepository.Login(loginRequestDTO);
-
-            if (user == null) throw new KeyNotFoundException("User not found"); // shouldn't happen
-                                                                                
-            string writtenToken = GenerateJWTToken(user);
+            if (user==null) throw new UnauthorizedAccessException($"UserName or password are not valid");
 
 
+            //var user = await _userRepository.Login(loginRequestDTO);
+
+            //if (user == null) throw new KeyNotFoundException("User not found"); // shouldn't happen
+            string writtenToken =await GenerateJWTToken(user);
+
+            var roles = await _userManager.GetRolesAsync(user);
             LoginResponseDTO loginResponseDTO = new LoginResponseDTO()
             {
                 Token = writtenToken,
-                User = user
+                User = _mapper.Map<UserDTO>(user),
+                Role= roles.FirstOrDefault()!
             };
             return loginResponseDTO;
         }
 
-        private string GenerateJWTToken(LocalUser user)
+        private async Task<string> GenerateJWTToken(ApplicationUser user)
         {
             string secretKey = _configuration.GetValue<string>("ApiSettings:Secret")!;
 
+            var roles = await _userManager.GetRolesAsync(user);
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(secretKey);
 
@@ -62,7 +71,7 @@ namespace Villa_VillaAPI.Services
                 Subject = new ClaimsIdentity(new Claim[]
                 {
                     new Claim(ClaimTypes.Name,user.Id.ToString()),
-                    new Claim(ClaimTypes.Role,user.Role)
+                    new Claim(ClaimTypes.Role,roles.FirstOrDefault()!)
                 }),
                 Expires = DateTime.UtcNow.AddDays(7),
                 SigningCredentials = new(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
@@ -73,24 +82,62 @@ namespace Villa_VillaAPI.Services
             return writtenToken;
         }
 
-        public async Task<LocalUser> Register(RegistrationRequestDTO registrationRequestDTO)
+        public async Task<UserDTO> Register(RegistrationRequestDTO registrationRequestDTO)
         {
             bool uniqueUser = await isUniqueUser(registrationRequestDTO.UserName);
             if(!uniqueUser)
             {
                 throw new InvalidOperationException("UserName already exists");
             }
-            LocalUser user = new LocalUser()
+            ApplicationUser user = new ApplicationUser()
             {
                 Name = registrationRequestDTO.Name,
-                Password = registrationRequestDTO.Password,
+                Email = registrationRequestDTO.UserName,
+                NormalizedEmail = registrationRequestDTO.UserName.ToUpper(),
                 UserName = registrationRequestDTO.UserName,
-                Role = registrationRequestDTO.Role,
-                
+
             };
 
             
-            return await _userRepository.Register(user);
+            
+                var result = await _userManager.CreateAsync(user, registrationRequestDTO.Password);
+                if(result.Succeeded)
+                {
+                    await validateRoles();
+                    await _userManager.AddToRoleAsync(user, "user");
+                    var userToReturn = await _userRepository.GetUser(user.UserName);
+                    return new UserDTO()
+                    {
+                        ID = userToReturn.Id,
+                        UserName = userToReturn.UserName,
+                        Name = user.Name
+                    };
+                }
+                else
+                {
+                    throw new Exception($"{result.Errors.FirstOrDefault()}");
+                }  
+            
+
+
+            
+        }
+
+        private async Task validateRoles()
+        {
+            bool isAdminRoleExists=await _roleManager.RoleExistsAsync("admin");
+            bool isUserRoleExists = await _roleManager.RoleExistsAsync("user");
+            if(!isAdminRoleExists)
+            {
+                await _roleManager.CreateAsync(new IdentityRole("admin"));
+            }
+
+            if(!isUserRoleExists)
+            {
+                await _roleManager.CreateAsync(new IdentityRole("user"));
+            }
+
+
         }
     }
 }

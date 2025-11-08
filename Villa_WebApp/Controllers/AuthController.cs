@@ -44,7 +44,7 @@ namespace Villa_WebApp.Controllers
 
                     var identity = new ClaimsIdentity(CookieAuthenticationDefaults.AuthenticationScheme);
                     identity.AddClaim(new Claim(ClaimTypes.Name, loginResponse.User.UserName));
-                    identity.AddClaim(new Claim(ClaimTypes.Role,loginResponse.User.Role));
+                    identity.AddClaim(new Claim(ClaimTypes.Role,loginResponse.Role));
                     var principal = new ClaimsPrincipal(identity);
 
                     await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);

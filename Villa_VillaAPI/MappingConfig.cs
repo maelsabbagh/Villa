@@ -26,6 +26,8 @@ namespace Villa_VillaAPI
             CreateMap<VillaNumberUpdateDTO, VillaNumber>()
                 .ForMember(dest => dest.UpdatedDate, opt => opt.MapFrom(src => DateTime.Now));
 
+            CreateMap<ApplicationUser, UserDTO>().ReverseMap();
+
 
                 
 
