@@ -96,6 +96,3 @@ While this project follows the core structure of the course, it also features my
     * The API documentation will be available at `/swagger` (e.g., `https://localhost:7001/swagger`).
     * The Web App will be running on its own port (e.g., `https://localhost:7002`).
 
-## License
-
-This project is licensed under the MIT License. See the `LICENSE` file for details.
