@@ -8,7 +8,7 @@ The "Villa" project demonstrates the creation and consumption of a secure, produ
 
 1.  **Villa_VillaAPI**: The core RESTful API service.
 2.  **Villa_WebApp**: A server-side web application (MVC/Razor) that consumes the API.
-3.  **Villa_Utility**: A shared class library for common models, helpers, and utilities.
+3.  **Villa_Utility**: static details
 
 ## Project Structure
 
@@ -21,9 +21,6 @@ The "Villa" project demonstrates the creation and consumption of a secure, produ
     * An ASP.NET Core Web App (likely MVC or Razor Pages).
     * Acts as a client to `Villa_VillaAPI`.
     * Provides a user interface for interacting with the API (e.g., viewing, creating, and updating villas).
-* `Villa_Utility/`
-    * A .NET class library.
-    * Contains shared resources like Data Transfer Objects (DTOs), static details, and helper functions to avoid code duplication between the API and Web App.
 
 ## Core Features
 
